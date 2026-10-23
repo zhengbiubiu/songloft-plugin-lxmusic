@@ -1,0 +1,7 @@
+{
+  "name": "Songloft LxMusic 插件源",
+  "includes": [],
+  "plugins": [
+    "https://raw.githubusercontent.com/<你的用户名>/songloft-plugin-lxmusic/main/plugin.json"
+  ]
+}
