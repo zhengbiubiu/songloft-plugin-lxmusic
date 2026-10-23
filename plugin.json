@@ -20,7 +20,7 @@
     "/stream"
   ],
   "updateUrl": "https://raw.githubusercontent.com/zhengbiubiu/songloft-plugin-lxmusic/main/plugin.json",
-  "download_url": "https://github.com/zhengibubiu/songloft-plugin-lxmusic/releases/download/v2026.10.23/lx-music-plugin.jsplugin.zip",
+  "download_url": "https://github.com/zhengbiubiu/songloft-plugin-lxmusic/releases/download/v2026.10.23/lx-music-plugin.jsplugin.zip",
   "entryHash": "badd28d730c7e13960f0b55d67d8fb3f22612f293712471441aa47ab6a8028b1",
   "zipHash": "f588a7f20532164f5f9c6efcc19c74109254063d1ac6c7690ba3b6d62a51fc9a"
 }
