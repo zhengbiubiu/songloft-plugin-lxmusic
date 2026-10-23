@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/songloft-org/plugin-toolchain/main/schemas/plugin.schema.json",
+  "name": "LxMusic",
+  "version": "2026.10.23",
+  "description": "连接 LX Music Sync Server (lxserver) 聚合多平台免费音源（酷我/QQ/酷狗/网易云/咪咕等），向 Songloft 提供网络搜索、播放直链、歌词与封面服务；自动向 MIoT 智能音箱注册外部搜索源，支持小爱语音点歌走 LX Music 免费资源。",
+  "author": "LxMusic Plugin",
+  "homepage": "https://github.com/XCQ0607/lxserver",
+  "license": "Apache-2.0",
+  "icon": "icon.svg",
+  "entryPath": "lx-music-plugin",
+  "main": "main.js",
+  "minHostVersion": "2.7.0",
+  "permissions": [
+    "storage",
+    "songs.read",
+    "inter-plugin",
+    "net"
+  ],
+  "publicPaths": [
+    "/stream"
+  ],
+  "updateUrl": "https://raw.githubusercontent.com/zhengbiubiu/songloft-plugin-lxmusic/main/plugin.json",
+  "download_url": "https://github.com/zhengibubiu/songloft-plugin-lxmusic/releases/download/v2026.10.23/lx-music-plugin.jsplugin.zip",
+  "entryHash": "badd28d730c7e13960f0b55d67d8fb3f22612f293712471441aa47ab6a8028b1",
+  "zipHash": "f588a7f20532164f5f9c6efcc19c74109254063d1ac6c7690ba3b6d62a51fc9a"
+}
