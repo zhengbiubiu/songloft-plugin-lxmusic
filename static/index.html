@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LX Music Plugin 设置</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 28px 32px;
+    }
+    .header h1 { margin: 0; font-size: 22px; font-weight: 600; }
+    .header p { margin: 6px 0 0; opacity: 0.9; font-size: 13px; }
+    .body { padding: 28px 32px 32px; }
+    .section { margin-bottom: 24px; }
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #667eea;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #eef;
+    }
+    .form-row { margin-bottom: 16px; }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    input[type="text"], input[type="password"], select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+      outline: none;
+      background: #fff;
+    }
+    input[type="text"]:focus, input[type="password"]:focus, select:focus {
+      border-color: #667eea;
+    }
+    .hint {
+      font-size: 12px;
+      color: #999;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+    }
+    .source-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      background: #f5f5ff;
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 13px;
+    }
+    .source-item input { margin: 0; }
+    .source-item.selected { background: #667eea; color: white; }
+    .quality-row { display: flex; gap: 8px; }
+    .quality-row select { flex: 1; }
+    .btn-row { display: flex; gap: 10px; margin-top: 16px; }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      flex: 1;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #555;
+    }
+    .btn-secondary:hover { background: #e0e0e0; }
+    .health-box {
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .health-box.ok { background: #e8f5e9; color: #2e7d32; display: block; }
+    .health-box.error { background: #ffebee; color: #c62828; display: block; }
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-80px);
+      background: #333;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .divider { height: 1px; background: #eee; margin: 16px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎵 LX Music Plugin</h1>
+      <p>连接 LX Music Sync Server，为 Songloft 提供多平台免费音乐搜索与播放</p>
+    </div>
+
+    <div class="body">
+      <!-- lxserver 服务地址 -->
+      <div class="section">
+        <div class="section-title">服务连接</div>
+        <div class="form-row">
+          <label for="baseUrl">lxserver 服务地址 <span style="color:#e53935">*</span></label>
+          <input type="text" id="baseUrl" placeholder="http://192.168.1.190:9527" />
+          <div class="hint">LX Music Sync Server 的 HTTP 地址（默认端口 9527）。例如部署在 NAS 上：http://192.168.1.100:9527</div>
+        </div>
+
+        <div class="health-box" id="healthBox"></div>
+        <div class="btn-row" style="margin-top:4px">
+          <button class="btn-secondary" id="btnHealthCheck" style="flex:none;padding:8px 16px">🔍 测试连接</button>
+        </div>
+      </div>
+
+      <!-- 对外可达地址 -->
+      <div class="section">
+        <div class="section-title">高级（可选）</div>
+        <div class="form-row">
+          <label for="serverHost">对外可达 Songloft 地址</label>
+          <input type="text" id="serverHost" placeholder="http://192.168.1.190:58091" />
+          <div class="hint">音箱直连播放 /stream 路由时使用。留空自动推导（从 baseUrl host / getHostUrl / 网卡 LAN 地址依次尝试）。如反代或多网卡环境推导失败时手动填写。</div>
+        </div>
+        <div class="form-row">
+          <label for="username">鉴权用户名（lxserver 未开启鉴权时留空）</label>
+          <input type="text" id="username" placeholder="open / admin" />
+        </div>
+        <div class="form-row">
+          <label for="password">鉴权密码</label>
+          <input type="password" id="password" placeholder="lxserver 访问密码" />
+        </div>
+      </div>
+
+      <!-- 搜索源配置 -->
+      <div class="section">
+        <div class="section-title">搜索平台</div>
+        <div class="form-row">
+          <label>默认搜索平台（按优先级串行搜索，找到第一个结果即返回）</label>
+          <div class="source-grid" id="sourceGrid"></div>
+          <div class="hint">topone 端点（小爱语音点歌 / 外部搜索）会按从上到下顺序依次搜索，酷我 kw 免费资源多建议优先。</div>
+        </div>
+      </div>
+
+      <!-- 音质 -->
+      <div class="section">
+        <div class="section-title">音质偏好</div>
+        <div class="form-row">
+          <label for="quality">默认音质</label>
+          <div class="quality-row">
+            <select id="quality">
+              <option value="128k">标准 128k</option>
+              <option value="320k">高音质 320k</option>
+              <option value="flac">无损 FLAC</option>
+              <option value="hires">Hi-Res</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- 保存 -->
+      <div class="btn-row">
+        <button class="btn-secondary" id="btnReset" type="button">🔄 重置</button>
+        <button class="btn-primary" id="btnSave" type="button">💾 保存配置</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const SOURCES = [
+      { value: 'kw', label: '酷我 (kw)', note: '免费多' },
+      { value: 'tx', label: 'QQ (tx)', note: '' },
+      { value: 'wy', label: '网易云 (wy)', note: '' },
+      { value: 'mg', label: '咪咕 (mg)', note: '' },
+      { value: 'kg', label: '酷狗 (kg)', note: '' },
+      { value: 'bd', label: '百度 (bd)', note: '' },
+      { value: 'joox', label: 'JOOX', note: '' },
+      { value: 'migu', label: 'Migu', note: '' },
+    ]
+
+    const QUALITIES = ['128k', '320k', 'flac', 'hires']
+
+    // 获取插件的 base URL（运行时 Songloft 会把插件挂载在 /api/v1/jsplugin/{entryPath}/）
+    // 前端 WebView 相对路径请求即可（必须用 ./ 前缀，绝对路径 / 会指向 Songloft 主域）
+    const API = {
+      config: './config',
+      health: './health',
+    }
+
+    function showToast(msg, ms = 2000) {
+      const el = document.getElementById('toast')
+      el.textContent = msg
+      el.classList.add('show')
+      setTimeout(() => el.classList.remove('show'), ms)
+    }
+
+    function renderSourceGrid(selectedSources) {
+      const grid = document.getElementById('sourceGrid')
+      grid.innerHTML = ''
+      SOURCES.forEach((s) => {
+        const checked = selectedSources.includes(s.value)
+        const div = document.createElement('div')
+        div.className = 'source-item' + (checked ? ' selected' : '')
+        div.dataset.value = s.value
+        div.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''} /><span>${s.label}</span>`
+        div.addEventListener('click', () => {
+          const cb = div.querySelector('input')
+          cb.checked = !cb.checked
+          div.classList.toggle('selected', cb.checked)
+          // 维持顺序
+          const items = [...grid.querySelectorAll('.source-item')]
+          const selected = items.filter((i) => i.querySelector('input').checked).map((i) => i.dataset.value)
+          // 移到前面确保有选中项
+          if (!selected.length) {
+            // 禁止全选空
+            cb.checked = true
+            div.classList.add('selected')
+          }
+        })
+        grid.appendChild(div)
+      })
+    }
+
+    function getSelectedSources() {
+      const grid = document.getElementById('sourceGrid')
+      const items = [...grid.querySelectorAll('.source-item')]
+      return items.filter((i) => i.querySelector('input').checked).map((i) => i.dataset.value)
+    }
+
+    async function loadConfig() {
+      try {
+        const resp = await fetch(API.config)
+        const data = await resp.json()
+        document.getElementById('baseUrl').value = data.baseUrl || ''
+        document.getElementById('serverHost').value = data.serverHost || ''
+        document.getElementById('username').value = data.username || ''
+        document.getElementById('quality').value = QUALITIES.includes(data.quality) ? data.quality : '128k'
+        renderSourceGrid(data.defaultSources?.length ? data.defaultSources : ['kw', 'tx', 'wy', 'mg', 'kg', 'bd'])
+      } catch (e) {
+        showToast('加载配置失败')
+        renderSourceGrid(['kw', 'tx', 'wy', 'mg', 'kg', 'bd'])
+      }
+    }
+
+    async function saveConfig() {
+      const payload = {
+        baseUrl: document.getElementById('baseUrl').value.trim(),
+        serverHost: document.getElementById('serverHost').value.trim(),
+        username: document.getElementById('username').value.trim(),
+        password: document.getElementById('password').value,
+        defaultSources: getSelectedSources(),
+        quality: document.getElementById('quality').value,
+      }
+      if (!payload.baseUrl) {
+        showToast('请先填写 lxserver 服务地址')
+        return
+      }
+      try {
+        const resp = await fetch(API.config, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        const data = await resp.json()
+        if (data.success) {
+          showToast('✅ 保存成功！已自动向 miot 注册搜索源。')
+        } else {
+          showToast('❌ 保存失败')
+        }
+      } catch (e) {
+        showToast('❌ 保存请求失败')
+      }
+    }
+
+    async function healthCheck() {
+      showToast('正在测试连接...', 1500)
+      try {
+        const resp = await fetch(API.health)
+        const data = await resp.json()
+        const box = document.getElementById('healthBox')
+        if (data.ok) {
+          box.className = 'health-box ok'
+          box.textContent = '✅ ' + data.msg
+        } else {
+          box.className = 'health-box error'
+          box.textContent = '❌ ' + data.msg
+        }
+      } catch (e) {
+        const box = document.getElementById('healthBox')
+        box.className = 'health-box error'
+        box.textContent = '❌ 请求失败：' + (e.message || e)
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadConfig()
+      document.getElementById('btnSave').addEventListener('click', saveConfig)
+      document.getElementById('btnReset').addEventListener('click', () => location.reload())
+      document.getElementById('btnHealthCheck').addEventListener('click', healthCheck)
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# 构建产物
+*.zip
+__pycache__/
+*.pyc
+
+# 临时文件
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db

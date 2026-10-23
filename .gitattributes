@@ -1,0 +1,6 @@
+# 强制所有文本文件用 LF 换行（hash 计算和 Songloft 后端要求）
+* text=auto eol=lf
+
+# 二进制文件不换行
+*.zip binary
+*.svg binary
